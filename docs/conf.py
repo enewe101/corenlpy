@@ -49,7 +49,7 @@ source_suffix = '.rst'
 master_doc = 'index'
 
 # General information about the project.
-project = u'corenlp-xml-reader'
+project = u'corenlpy'
 copyright = u'2016, Edward Newell'
 author = u'Edward Newell'
 
