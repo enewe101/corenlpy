@@ -1,0 +1,272 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>Corenlp-xml-reader documentation &mdash; corenlp-xml-reader 0.0.4 documentation</title>
+    
+    <link rel="stylesheet" href="_static/alabaster.css" type="text/css" />
+    <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    './',
+        VERSION:     '0.0.4',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="_static/jquery.js"></script>
+    <script type="text/javascript" src="_static/underscore.js"></script>
+    <script type="text/javascript" src="_static/doctools.js"></script>
+    <script type="text/javascript" src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    <link rel="top" title="corenlp-xml-reader 0.0.4 documentation" href="#" />
+   
+  
+  <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9">
+
+  </head>
+  <body role="document">  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <div class="section" id="module-corenlp_xml_reader">
+<span id="corenlp-xml-reader-documentation"></span><h1>Corenlp-xml-reader documentation<a class="headerlink" href="#module-corenlp_xml_reader" title="Permalink to this headline">¶</a></h1>
+<div class="section" id="purpose">
+<h2>Purpose<a class="headerlink" href="#purpose" title="Permalink to this headline">¶</a></h2>
+<p>Stanford&#8217;s CoreNLP tool suite is a full-featured tool for generating
+annotations in text like POS (part-of-speech) tags and the dependency
+parse.</p>
+<p>The CoreNLP tool can output the annotations to xml files.
+Working with these files is a bit tricky: it is up to the reading
+program to rebuild the logical links between the various kinds of
+information (e.g. POS, parse, and coreference information, etc).</p>
+<p>The format also has some questionable aspects.  It uses one-based indexing
+for sentence and token ids, while character offsets are zero-based.
+Also, named entities and coreference chains don&#8217;t have a consistent
+relationship to one another.</p>
+<p>The <code class="docutils literal"><span class="pre">corenlp_xml_reader</span></code> provides an API in Python that simplifies
+access to CoreNLP&#8217;s annotations and traversal of the document, while
+ironing out some of the inconsistencies.</p>
+</div>
+<div class="section" id="install">
+<h2>Install<a class="headerlink" href="#install" title="Permalink to this headline">¶</a></h2>
+<p>Basic install: <code class="docutils literal"><span class="pre">pip</span> <span class="pre">install</span> <span class="pre">corenlp-xml-reader</span></code></p>
+<p>Hackable install:</p>
+<div class="highlight-bash"><div class="highlight"><pre>git clone https://github.com/enewe101/corenlp-xml-reader.git
+<span class="nb">cd </span>corenlp-xml-reader
+python setup.py develop
+</pre></div>
+</div>
+</div>
+<div class="section" id="example">
+<h2>Example<a class="headerlink" href="#example" title="Permalink to this headline">¶</a></h2>
+<p>Suppose we have the one-sentence document:</p>
+<blockquote>
+<div><em>President Obama cannot run for a third term (but I think he wants to).</em></div></blockquote>
+<p>Let&#8217;s assume that it has been processed by CoreNLP, creating the output
+file <code class="docutils literal"><span class="pre">obama.txt.xml</span></code>.  Let&#8217;s import the module and get an <code class="docutils literal"><span class="pre">AnnotatedText</span></code> object.</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">corenlp_xml_reader</span> <span class="kn">import</span> <span class="n">AnnotatedText</span> <span class="k">as</span> <span class="n">A</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">xml</span> <span class="o">=</span> <span class="nb">open</span><span class="p">(</span><span class="s">&#39;obama.txt.xml&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">read</span><span class="p">()</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">annotated_text</span> <span class="o">=</span> <span class="n">A</span><span class="p">(</span><span class="n">xml</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>Usually you&#8217;ll access parts of the document using the <code class="docutils literal"><span class="pre">sentences</span></code> list.</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="nb">len</span><span class="p">(</span><span class="n">annotated_text</span><span class="o">.</span><span class="n">sentences</span><span class="p">)</span>
+<span class="go">1</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">sentence</span> <span class="o">=</span> <span class="n">annotated_text</span><span class="o">.</span><span class="n">sentences</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">sentence</span><span class="o">.</span><span class="n">keys</span><span class="p">()</span>
+<span class="go">[&#39;tokens&#39;, &#39;entities&#39;, &#39;references&#39;, &#39;mentions&#39;, &#39;root&#39;, &#39;id&#39;]</span>
+</pre></div>
+</div>
+<p>A <code class="docutils literal"><span class="pre">Sentence</span></code> is a special class that, for the most part, feels like a
+simple <code class="docutils literal"><span class="pre">dict</span></code>.
+The <code class="docutils literal"><span class="pre">tokens</span></code> property is a list of the sentence&#8217;s tokens:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">obama</span> <span class="o">=</span> <span class="n">sentence</span><span class="p">[</span><span class="s">&#39;tokens&#39;</span><span class="p">][</span><span class="mi">1</span><span class="p">]</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">obama</span>
+<span class="go">&#39; 0: Obama (10,14) NNP PERSON&#39;</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">term</span> <span class="o">=</span> <span class="n">sentence</span><span class="p">[</span><span class="s">&#39;tokens&#39;</span><span class="p">][</span><span class="mi">7</span><span class="p">]</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">term</span>
+<span class="go">&#39; 7: term (39,42) NN -&#39;</span>
+</pre></div>
+</div>
+<p>Tokens have properties corresponding to CoreNLP&#8217;s annotations, plus some
+other stuff:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">obama</span><span class="o">.</span><span class="n">keys</span><span class="p">()</span>
+<span class="go">[&#39;word&#39;, &#39;character_offset_begin&#39;, &#39;character_offset_end&#39;, &#39;pos&#39;,</span>
+<span class="go">&#39;lemma&#39;, &#39;sentence_id&#39;, &#39;entity_idx&#39;, &#39;speaker&#39;, &#39;mention&#39;, &#39;parents&#39;,</span>
+<span class="go">&#39;ner&#39;, &#39;id&#39;]</span>
+</pre></div>
+</div>
+<p>&#8220;Obama&#8221; is the name of a person, so, if CoreNLP is working well, it should
+pick that up.  Named entity information is found in the <code class="docutils literal"><span class="pre">ner</span></code> property:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">obama</span><span class="p">[</span><span class="s">&#39;ner&#39;</span><span class="p">]</span>
+<span class="go">&#39;PERSON&#39;</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">term</span><span class="p">[</span><span class="s">&#39;ner&#39;</span><span class="p">]</span> <span class="ow">is</span> <span class="bp">None</span>
+<span class="go">True</span>
+</pre></div>
+</div>
+<p>Similarly we can check the part-of-speech:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">obama</span><span class="p">[</span><span class="s">&#39;pos&#39;</span><span class="p">]</span>
+<span class="go">&#39;NNP&#39;</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">term</span><span class="p">[</span><span class="s">&#39;pos&#39;</span><span class="p">]</span>
+<span class="go">&#39;NN&#39;</span>
+</pre></div>
+</div>
+<p>We can traverse the dependency tree using the <code class="docutils literal"><span class="pre">parents</span></code> and <code class="docutils literal"><span class="pre">children</span></code>
+properties.  In our example, &#8220;run&#8221; is the parent of &#8220;Obama&#8221;
+(because &#8220;Obama&#8221; is the subject (<code class="docutils literal"><span class="pre">nsubj</span></code>) of &#8220;run&#8221;):</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">relation</span><span class="p">,</span> <span class="n">parent</span> <span class="o">=</span> <span class="n">obama</span><span class="p">[</span><span class="s">&#39;parents&#39;</span><span class="p">][</span><span class="mi">0</span><span class="p">]</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">relation</span>
+<span class="go">u&#39;nsubj&#39;</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">parent</span>
+<span class="go">&#39; 3: run (23,25) -&#39;</span>
+</pre></div>
+</div>
+<p>If you&#8217;re processing dependency trees, you&#8217;ll often want to start with
+the head word (which is like the root of the sentence).  Sentences have a
+special <code class="docutils literal"><span class="pre">root</span></code> property that stores the head word.  Usually it&#8217;s a verb:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">sentence</span><span class="p">[</span><span class="s">&#39;root&#39;</span><span class="p">]</span>
+<span class="go">&#39; 3: run (23,25) -&#39;</span>
+</pre></div>
+</div>
+<p>A coreference chain is a series of references to the same entity.  In our
+example, &#8220;President Obama&#8221; and &#8220;he&#8221; are each <em>mentions</em> from the same
+coreference chain.  We can access all the mentions of a coreference chain.</p>
+<p>First, we can get the mention that &#8220;Obama&#8221; is part of:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">first_mention</span> <span class="o">=</span> <span class="n">obama</span><span class="p">[</span><span class="s">&#39;mention&#39;</span><span class="p">]</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">first_mention</span><span class="p">[</span><span class="s">&#39;tokens&#39;</span><span class="p">]</span>
+<span class="go">[&#39; 0: President (0,8) -&#39;, &#39; 1: Obama (10,14) PERSON&#39;]</span>
+</pre></div>
+</div>
+<p>Then, from a given mention, we can access the chain, and all other mentions.
+The coreference chain that includes &#8220;President Obama&#8221; should also include
+&#8220;he&#8221;:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">reference</span> <span class="o">=</span> <span class="n">first_mention</span><span class="p">[</span><span class="s">&#39;reference&#39;</span><span class="p">]</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="nb">len</span><span class="p">(</span><span class="n">reference</span><span class="p">[</span><span class="s">&#39;mentions&#39;</span><span class="p">])</span>
+<span class="go">2</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">reference</span><span class="p">[</span><span class="s">&#39;mentions&#39;</span><span class="p">][</span><span class="mi">1</span><span class="p">][</span><span class="s">&#39;tokens&#39;</span><span class="p">]</span>
+<span class="go">[&#39;12: he (57,58) -&#39;]</span>
+</pre></div>
+</div>
+<p>We can access all of the mentions or all of the coreference chains, for
+a given sentence, using its <code class="docutils literal"><span class="pre">mentions</span></code> and <code class="docutils literal"><span class="pre">references</span></code> properties.</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="nb">len</span><span class="p">(</span><span class="n">sentence</span><span class="p">[</span><span class="s">&#39;mentions&#39;</span><span class="p">])</span>
+<span class="go">2</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="nb">len</span><span class="p">(</span><span class="n">sentence</span><span class="p">[</span><span class="s">&#39;references&#39;</span><span class="p">])</span>
+<span class="go">1</span>
+</pre></div>
+</div>
+<p>One thing to note is that mentions and references aren&#8217;t necessarily
+anchored to any named entity.  But they often are: in our example, we
+had &#8220;Obama&#8221;.  To contrast, consider this sentence:</p>
+<blockquote>
+<div><em>The police are yet to find any suspects.  They say they will continue
+their search.</em></div></blockquote>
+<p>Here, &#8220;The police&#8221;, &#8220;they&#8221; (which occurs twice), and &#8220;their&#8221; are all
+part of one coreference chain, yet none is a named entity.</p>
+<p>To access <em>only</em> mentions that are named entities, use the <code class="docutils literal"><span class="pre">entities</span></code>
+property of the sentence.</p>
+<p>The document as a whole also provides global <code class="docutils literal"><span class="pre">mentions</span></code>, <code class="docutils literal"><span class="pre">references</span></code>,
+and <code class="docutils literal"><span class="pre">entities</span></code> properties which can be iterated over directly..</p>
+<dl class="class">
+<dt id="corenlp_xml_reader.AnnotatedText">
+<em class="property">class </em><code class="descclassname">corenlp_xml_reader.</code><code class="descname">AnnotatedText</code><span class="sig-paren">(</span><em>corenlp_xml</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#corenlp_xml_reader.AnnotatedText" title="Permalink to this definition">¶</a></dt>
+<dd><p>Create a new AnnotatedText object.  Only the first parameter is normally
+needed.  The remaining parameters enable adding entity linking data from
+the AIDA software, controlling the kind of dependency parse
+used, and filtering the kinds of named entities, coreference chains,
+and mentions that are included (by default all those provided by CoreNLP
+are are included).</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>corenlp_xml</strong> (<em>str</em>) &#8211; An xml string output by CoreNLP.</li>
+<li><strong>aida_json=None</strong> (<em>str</em>) &#8211; A JSON string output by AIDA.  AIDA is a program that disambiguates named entities, linking them to the YAGO knowledge base.  If the JSON output of AIDA is provided, then <code class="docutils literal"><span class="pre">entities</span></code>, <code class="docutils literal"><span class="pre">mentions</span></code> and <code class="docutils literal"><span class="pre">references</span></code> entries will be augmented with entity linking information.</li>
+<li><strong>dependencies='collapsed-ccprocessed'</strong> (<em>str</em>) &#8211; Determines which kind of dependencies will be used in constructing dependency trees.  Three options are available: <code class="docutils literal"><span class="pre">'collapsed-ccprocessed'</span></code> (the default), <code class="docutils literal"><span class="pre">'collapsed'</span></code>, and <code class="docutils literal"><span class="pre">'basic'</span></code>.</li>
+<li><strong>exclude_ordinal_NERs=False</strong> (<em>bool</em>) &#8211; Whether to recognize ordinal named entities.  If <code class="docutils literal"><span class="pre">True</span></code>, named entities of the following types will be ignored: <code class="docutils literal"><span class="pre">'TIME'</span></code>, <code class="docutils literal"><span class="pre">'DATE'</span></code>, <code class="docutils literal"><span class="pre">'NUMBER'</span></code>, <code class="docutils literal"><span class="pre">'DURATION'</span></code>, <code class="docutils literal"><span class="pre">'PERCENT'</span></code>, <code class="docutils literal"><span class="pre">'SET'</span></code>, <code class="docutils literal"><span class="pre">'ORDINAL'</span></code>, and <code class="docutils literal"><span class="pre">'MONEY'</span></code>.</li>
+<li><strong>exclude_long_mentions=False</strong> (<em>bool</em>) &#8211; CoreNLP occaisionally includes mentions, as part of coreference chains, that are very long noun phrases.  These mentions can be surprising and are often not useful.  Setting this option to <code class="docutils literal"><span class="pre">True</span></code> causes any mentions longer that the value specified by <code class="docutils literal"><span class="pre">long_mention_threshold</span></code> to be discarded (default length is 5 tokens).</li>
+<li><strong>long_mention_threshold=5</strong> (<em>int</em>) &#8211; Maximum number of tokens allowed in a coreference chain mention, above which the mention will be ignored if <code class="docutils literal"><span class="pre">exclude_long_mentions</span></code> is <code class="docutils literal"><span class="pre">True</span></code>.</li>
+<li><strong>exclude_non_ner_coreferences=False</strong> (<em>bool</em>) &#8211; In some cases, it is only desirable to consider those coreference chains that have at least one named entity as a mention.  Setting this option to <code class="docutils literal"><span class="pre">True</span></code> will exclude references and their mentions if the reference includes no named entities.</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+</div>
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+  <h3><a href="#">Table Of Contents</a></h3>
+  <ul>
+<li><a class="reference internal" href="#">Corenlp-xml-reader documentation</a><ul>
+<li><a class="reference internal" href="#purpose">Purpose</a></li>
+<li><a class="reference internal" href="#install">Install</a></li>
+<li><a class="reference internal" href="#example">Example</a></li>
+</ul>
+</li>
+</ul>
+<div class="relations">
+<h3>Related Topics</h3>
+<ul>
+  <li><a href="#">Documentation overview</a><ul>
+  </ul></li>
+</ul>
+</div>
+  <div role="note" aria-label="source link">
+    <h3>This Page</h3>
+    <ul class="this-page-menu">
+      <li><a href="_sources/index.txt"
+            rel="nofollow">Show Source</a></li>
+    </ul>
+   </div>
+<div id="searchbox" style="display: none" role="search">
+  <h3>Quick search</h3>
+    <form class="search" action="search.html" method="get">
+      <input type="text" name="q" />
+      <input type="submit" value="Go" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+    <p class="searchtip" style="font-size: 90%">
+    Enter search terms or a module, class or function name.
+    </p>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="footer">
+      &copy;2016, Edward Newell.
+      
+      |
+      Powered by <a href="http://sphinx-doc.org/">Sphinx 1.3.1</a>
+      &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.6</a>
+      
+      |
+      <a href="_sources/index.txt"
+          rel="nofollow">Page source</a>
+    </div>
+
+    
+
+    
+  </body>
+</html>
