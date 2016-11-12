@@ -15,8 +15,13 @@ Stanford's CoreNLP tool suite is a full-featured tool for generating
 annotations in text like POS (part-of-speech) tags and the dependency 
 parse.
 
+This package is designed to make working with CoreNLP a bit easier for
+Python users.  The main gain is in working with the annotated
+output from CoreNLP, but this package also makes it easy to call CoreNLP 
+from within python.
+
 The CoreNLP tool can output the annotations to xml files.  
-Working with these files is a bit tricky: it is up to the reading
+Working with these files is a bit tricky: it's up to the reading
 program to rebuild the logical links between the various kinds of
 information (e.g. POS, parse, and coreference information, etc).  
 
@@ -25,9 +30,15 @@ for sentence and token ids, while character offsets are zero-based.
 Also, named entities and coreference chains don't have a consistent
 relationship to one another.
 
-The ``AnnotatedText`` class provides an API in Python that simplifies
-access to CoreNLP's annotations and traversal of the document, while
-ironing out some of the inconsistencies.
+The ``corenlpy.AnnotatedText`` class provides an API in Python that 
+simplifies access to CoreNLP's annotations and traversal of the annotated
+document, while ironing out some of the inconsistencies.
+
+CoreNLP can be fairly easily run from the commandline.  But, you may
+prefer to use the ``corenlpy.corenlp()`` function to invoke it from
+within Python.  This can make it a bit easier, for example, to make
+a script that processes all the files in several directories.
+
 
 Install
 -------
@@ -41,6 +52,100 @@ Hackable install:
    git clone https://github.com/enewe101/corenlpy.git
    cd corenlpy
    python setup.py develop
+
+
+Run CoreNLP in python
+---------------------
+CoreNLP is easy to run from the commandline.  However, if you want to run
+it on many files in different directories, or integrate it with other 
+scripting logic, it may be easier to invoke it within python.  This package
+simplifies running CoreNLP in that case.  This isn't a "wrapper" because
+it is really just invoking CoreNLP through a system call, which you could
+do yourself on the commandline.
+
+For this to work, you will need to download and unzip CoreNLP.  If you
+rename (move) the folder found in the zip file to  ``~/corenlp``, then
+this package will find it automatically.  Otherwise, you can tell it where
+to find the CoreNLP .jar files by creating the file ``~/.corenlpyrc``
+that contains the path as follows:
+
+.. code-block:: JSON
+
+    {"corenlp_path": "path/to/the/corenlp/unzipped/dir"}
+
+To run corenlp on a file calld "my_file", you would do something like this:
+
+.. code-block:: python
+
+    >>> import corenlpy as c
+    >>> c.corenlp('path/to/my_file')
+
+By default, this will run CoreNLP on all the files in my_dir, putting the
+and write the resulting xml files to that directory.  
+
+The corenlp function allows you to specify various options.  You can 
+specify one or more input directories, or one or more input files, as
+well as set the output directory.  You can choose different output formats,
+set the number of concurrent threads, and pass in options normally 
+specified in the CoreNLP properties file using a dict.  The following
+examples illustrate these options
+
+First, you can specify one or more input directories, one or more 
+specific input file paths, and the output directory:
+
+.. code-block:: python
+
+    >>> c.corenlp(
+            in_dirs=['path/to/dir1', 'path/to/dir2'],
+            in_files=['path/to/some/file1', 'path/to/some/file2'],
+            out_dir='path/to/output_direcoty'
+        )
+
+Note that ``in_dirs`` can be a single directory or a list thereof, and
+``in_files`` can be a single file or a list thereof.  When directories
+are provided, CoreNLP will be invoked on *all* files within them.
+
+To control the kinds of annotations applied by CoreNLP, the number of 
+concurrent threads used, and the output format, do something like this:
+
+.. code-block:: python
+
+    >>> c.corenlp(
+            in_files="path/to/my_file",
+            annotators=['tokenize', 'ssplit', 'pos', 'lemma', 'ner', 'parse', 'dcoref'],
+            threads=4,
+            output_format="xml"
+        )
+
+See the [list of available annotators](http://stanfordnlp.github.io/CoreNLP/annotators.html).  The default output format is xml, 
+and this is the format that the ``AnnotatedText`` class is designed to use. 
+Other formats you can use are ``'json'``, ``'conll'``, ``'conllu'``, 
+``'text'``, and ``'serialized'``, as explained [here](http://stanfordnlp.github.io/CoreNLP/cmdline.html).
+
+CoreNLP also allows you to specify other options via a properties file.
+When invoking using the python function, you can provide the same options
+as a dictionary of key-value pairs.  The key should be the property
+(what appears on the left of the equals sign in a properties file) and the 
+value should be a string representation of everything on the right of the 
+equals sign.  In this example, a specific NER model us specified:
+
+.. code-block:: python
+
+    >>> c.corenlp(
+            'path/to/my_file',
+            properties={'ner.model':'edu/stanford/nlp/models/ner/english.conll.4class.distsim.crf.ser.gz'}
+        )
+
+Note that the number of threads and the annotators to be applied can both
+be specified as properties, and will override the corresponding keyword
+arguments.
+
+AnnotatedText
+------------
+The ``AnnotatedText`` class is what originally motivated the creation of
+this package.  If you need to work with annotation outputs from CoreNLP
+in Python, this will save you a lot of time.  It's best to illustrate how
+it works using some examples.
 
 Example
 -------
