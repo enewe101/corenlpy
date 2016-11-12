@@ -18,7 +18,7 @@ parse.
 This package is designed to make working with CoreNLP a bit easier for
 Python users.  The main gain is in working with the annotated
 output from CoreNLP, but this package also makes it easy to call CoreNLP 
-from within python.
+from within Python.
 
 The CoreNLP tool can output the annotations to xml files.  
 Working with these files is a bit tricky: it's up to the reading
@@ -58,16 +58,15 @@ Run CoreNLP in python
 ---------------------
 CoreNLP is easy to run from the commandline.  However, if you want to run
 it on many files in different directories, or integrate it with other 
-scripting logic, it may be easier to invoke it within python.  This package
+scripting logic, it may be easier to invoke it within Python.  This package
 simplifies running CoreNLP in that case.  This isn't a "wrapper" because
 it is really just invoking CoreNLP through a system call, which you could
 do yourself on the commandline.
 
-For this to work, you will need to download and unzip CoreNLP.  If you
-rename (move) the folder found in the zip file to  ``~/corenlp``, then
-this package will find it automatically.  Otherwise, you can tell it where
-to find the CoreNLP .jar files by creating the file ``~/.corenlpyrc``
-that contains the path as follows:
+You will need to download and unzip CoreNLP.  Rename (move) the directory
+found in the zip archive to ``~/corenlp`` to allow this package to find
+it automatically. Alternatively, make a ``~/.corenlpyrc`` file and put
+the following line in it, specifying the path to the CoreNLP directory:
 
 .. code-block:: JSON
 
@@ -79,14 +78,13 @@ this:
 .. code-block:: python
 
     >>> import corenlpy as c
-    >>> c.corenlp('path/to/my_file')
+    >>> c.corenlp('path/to/my_dir')
 
-This will run CoreNLP on all the files in my_dir, and write the resulting 
-xml files to that directory.  
+The output (xml) files will be written to the same directory by default.
 
-You to specify various options to control how CoreNLP is run.  You can 
-specify one or more input directories, or one or more input files, as
-well as set the output directory.  You can choose different output formats,
+You can control how CoreNLP is run using various keyword arugments.  You 
+can specify one or more input directories, or one or more input files, and
+set a different output directory.  You can choose different output formats,
 set the number of concurrent threads, and pass in 
 `"properties file" options <http://stanfordnlp.github.io/CoreNLP/cmdline.html>`_ (see subheading "Configuration") using a dict.  The following
 examples illustrate these options
@@ -126,7 +124,7 @@ Other formats you can use are ``'json'``, ``'conll'``, ``'conllu'``,
 CoreNLP also allows you to specify other options via a properties file
 (see `here <http://stanfordnlp.github.io/CoreNLP/cmdline.html>`_ under
 the subheading "Configuration").
-When invoking using the python function, you can provide the same options
+When invoking using the Python function, you can provide the same options
 as a dictionary of key-value pairs.  The key should be the property
 (what appears on the left of the equals sign in a properties file) and the 
 value should be a string representation of everything on the right of the 
@@ -139,16 +137,16 @@ equals sign.  In this example, a specific NER model us specified:
             properties={'ner.model':'edu/stanford/nlp/models/ner/english.conll.4class.distsim.crf.ser.gz'}
         )
 
-Note that the number of threads and the annotators to be applied can both
-be specified as properties, and will override the corresponding keyword
-arguments.
+Note that the number of threads and the annotators to be applied can be
+set using their keyword arguments, or they can be set in the properties
+dict, with the value in the properties dict taking precedence.
 
 AnnotatedText
 ------------
 The ``AnnotatedText`` class is what originally motivated the creation of
 this package.  If you need to work with annotation outputs from CoreNLP
 in Python, this will save you a lot of time.  It's best to illustrate how
-it works using some examples.
+it works using an example.
 
 Example
 -------
