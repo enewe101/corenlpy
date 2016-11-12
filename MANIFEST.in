@@ -1,4 +1,4 @@
-include corenlp_xml_reader/README.md
-include corenlp_xml_reader/data/AIDA/*
-include corenlp_xml_reader/data/CoreNLP/*
-include corenlp_xml_reader/data/raw-text/*
+include corenlpy/README.md
+include corenlpy/data/AIDA/*
+include corenlpy/data/CoreNLP/*
+include corenlpy/data/raw-text/*

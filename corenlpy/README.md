@@ -1,4 +1,4 @@
-# corenlp-xml-reader
+# corenlpy
 A utility for easily working with CoreNLP-annotated text in Python.
 
 ## About this package
@@ -11,13 +11,13 @@ does some necessary "fixing up" of the data in CoreNLP.
 ### Install
 Install from the Python Package Index:
 ```bash
-pip install corenlp-xml-reader
+pip install corenlpy
 ```
 
 Alternatively, install a version you can hack on:
 ```bash
-git clone https://github.com/enewe101/corenlp-xml-reader.git
-cd corenlp-xml-reader
+git clone https://github.com/enewe101/corenlpy.git
+cd corenlpy
 python setup.py develop
 ```
 

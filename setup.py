@@ -18,7 +18,7 @@ with open(path.join(here, 'corenlpy/README.md'), encoding='utf-8') as f:
 
 setup(
     name='corenlpy',
-    version='0.0.1',
+    version='0.0.2',
     description='Work with CoreNLP in Python',
     long_description=long_description,
     url='https://github.com/enewe101/corenlpy',
