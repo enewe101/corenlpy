@@ -3,8 +3,8 @@
    You can adapt this file completely to your liking, but it should at least
    contain the root `toctree` directive.
 
-Corenlp-xml-reader documentation
-================================
+Corenlpy documentation
+======================
 
 .. py:module:: corenlpy
 
@@ -25,7 +25,7 @@ for sentence and token ids, while character offsets are zero-based.
 Also, named entities and coreference chains don't have a consistent
 relationship to one another.
 
-The ``corenlpy`` provides an API in Python that simplifies
+The ``AnnotatedText`` class provides an API in Python that simplifies
 access to CoreNLP's annotations and traversal of the document, while
 ironing out some of the inconsistencies.
 
