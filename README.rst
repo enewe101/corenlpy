@@ -73,21 +73,22 @@ that contains the path as follows:
 
     {"corenlp_path": "path/to/the/corenlp/unzipped/dir"}
 
-To run corenlp on a file calld "my_file", you would do something like this:
+To run corenlp on all the files in "my_dir", you would do something like 
+this:
 
 .. code-block:: python
 
     >>> import corenlpy as c
     >>> c.corenlp('path/to/my_file')
 
-By default, this will run CoreNLP on all the files in my_dir, putting the
-and write the resulting xml files to that directory.  
+This will run CoreNLP on all the files in my_dir, and write the resulting 
+xml files to that directory.  
 
-The corenlp function allows you to specify various options.  You can 
+You to specify various options to control how CoreNLP is run.  You can 
 specify one or more input directories, or one or more input files, as
 well as set the output directory.  You can choose different output formats,
-set the number of concurrent threads, and pass in options normally 
-specified in the CoreNLP properties file using a dict.  The following
+set the number of concurrent threads, and pass in 
+`"properties file" options <http://stanfordnlp.github.io/CoreNLP/cmdline.html>`_ (see subheading "Configuration") using a dict.  The following
 examples illustrate these options
 
 First, you can specify one or more input directories, one or more 
@@ -122,7 +123,9 @@ and this is the format that the ``AnnotatedText`` class is designed to use.
 Other formats you can use are ``'json'``, ``'conll'``, ``'conllu'``, 
 ``'text'``, and ``'serialized'``, as explained `here <http://stanfordnlp.github.io/CoreNLP/cmdline.html>`_.
 
-CoreNLP also allows you to specify other options via a properties file.
+CoreNLP also allows you to specify other options via a properties file
+(see `here <http://stanfordnlp.github.io/CoreNLP/cmdline.html>`_ under
+the subheading "Configuration").
 When invoking using the python function, you can provide the same options
 as a dictionary of key-value pairs.  The key should be the property
 (what appears on the left of the equals sign in a properties file) and the 
