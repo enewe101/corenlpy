@@ -1,4 +1,4 @@
-.. corenlp-xml-reader documentation master file, created by
+.. corenlpy documentation master file, created by
    sphinx-quickstart on Wed Jul  6 22:46:00 2016.
    You can adapt this file completely to your liking, but it should at least
    contain the root `toctree` directive.
@@ -6,7 +6,7 @@
 Corenlp-xml-reader documentation
 ================================
 
-.. py:module:: corenlp_xml_reader
+.. py:module:: corenlpy
 
 Purpose
 -------
@@ -25,21 +25,21 @@ for sentence and token ids, while character offsets are zero-based.
 Also, named entities and coreference chains don't have a consistent
 relationship to one another.
 
-The ``corenlp_xml_reader`` provides an API in Python that simplifies
+The ``corenlpy`` provides an API in Python that simplifies
 access to CoreNLP's annotations and traversal of the document, while
 ironing out some of the inconsistencies.
 
 Install
 -------
 
-Basic install: ``pip install corenlp-xml-reader``
+Basic install: ``pip install corenlpy``
 
 Hackable install: 
 
 .. code-block:: bash
 
-   git clone https://github.com/enewe101/corenlp-xml-reader.git
-   cd corenlp-xml-reader
+   git clone https://github.com/enewe101/corenlpy.git
+   cd corenlpy
    python setup.py develop
 
 Example
@@ -59,7 +59,7 @@ object.
 
 .. code-block:: python
 
-   >>> from corenlp_xml_reader import AnnotatedText as A
+   >>> from corenlpy import AnnotatedText as A
    >>> xml = open('obama.txt.xml').read()
    >>> annotated_text = A(xml)
 
