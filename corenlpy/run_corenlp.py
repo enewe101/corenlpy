@@ -41,7 +41,7 @@ except KeyError:
 
 def corenlp(
 	in_dirs=[],
-	files=[],
+	in_files=[],
 	out_dir='.',
 	threads=1,
 	output_format='xml',
