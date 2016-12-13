@@ -63,7 +63,10 @@ def corenlp(
 
 	# Threads gets its own argument for convenience, but will be overridden
 	# by the properties dictionary if threads is specified there too.
-	properties_dict = {'threads': threads, annotators:', '.join(annotators)}
+	properties_dict = {
+		'threads': threads, 
+		'annotators':', '.join(annotators)
+	}
 	properties_dict.update(properties)
 
 	# create a properties file
