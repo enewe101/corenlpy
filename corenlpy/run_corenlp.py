@@ -55,7 +55,7 @@ def corenlp(
 	if isinstance(in_dirs, basestring):
 		in_dirs = [in_dirs]
 	if isinstance(in_dirs, basestring):
-		files = [files]
+		in_files = [in_files]
 
 	# Make the temp dir if necessary
 	if not os.path.exists(os.path.join(out_dir, 'temp')):
@@ -80,9 +80,9 @@ def corenlp(
 	properties_file.close()
 
 	# Absolutize file paths and collect files in directories
-	files = [os.path.abspath(f) for f in files]
+	in_files = [os.path.abspath(f) for f in in_files]
 	for in_dir in in_dirs:
-		files += [
+		in_files += [
 			os.path.join(in_dir, f)
 			for f in os.listdir(in_dir)
 		]
@@ -96,7 +96,7 @@ def corenlp(
 		os.makedirs(os.path.join(out_dir, 'temp'))
 
 	# Setup and dispatch the pool
-	parse_articles(out_dir, files, output_format)
+	parse_articles(out_dir, in_files, output_format)
 
 	print 'all done!'
 
