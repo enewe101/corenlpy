@@ -2,3 +2,4 @@ corenlpy/in
 corenlpy/out
 *.egg-info
 dist
+*.pyc
