@@ -1,3 +1,5 @@
+import time
+from hashlib import sha1
 import json
 import sys
 import os
@@ -54,12 +56,8 @@ def corenlp(
 	# Tolerate single files and single directories
 	if isinstance(in_dirs, basestring):
 		in_dirs = [in_dirs]
-	if isinstance(in_dirs, basestring):
+	if isinstance(in_files, basestring):
 		in_files = [in_files]
-
-	# Make the temp dir if necessary
-	if not os.path.exists(os.path.join(out_dir, 'temp')):
-		os.makedirs(os.path.join(out_dir, 'temp'))
 
 	# Threads gets its own argument for convenience, but will be overridden
 	# by the properties dictionary if threads is specified there too.
@@ -69,9 +67,15 @@ def corenlp(
 	}
 	properties_dict.update(properties)
 
+	# Create a temporary directory in which to store the properties files and
+	# list of input files
+	random_hash = sha1('%s%s' % (time.time(), os.getpid())).hexdigest()[:8]
+	temp_dir = '.corenlpy-%s' % random_hash
+	temp_path = os.path.join(out_dir, temp_dir)
+	os.makedirs(temp_path)
+
 	# create a properties file
-	temp_dir = os.path.join(out_dir, 'temp')
-	properties_path = os.path.join(temp_dir, 'stanford-properties.txt')
+	properties_path = os.path.join(temp_path, 'stanford-properties.txt')
 	properties_file = open(properties_path, 'w')
 	for prop in properties_dict:
 		properties_file.write(
@@ -91,26 +95,23 @@ def corenlp(
 	if not os.path.exists(out_dir):
 		os.makedirs(out_dir)
 
-	# Ensure that the temporary files directory exists
-	if not os.path.exists(os.path.join(out_dir, 'temp')):
-		os.makedirs(os.path.join(out_dir, 'temp'))
-
 	# Setup and dispatch the pool
-	parse_articles(out_dir, in_files, output_format)
+	parse_articles(out_dir, in_files, output_format, temp_path)
 
 	print 'all done!'
 
 	# Clean up the temporary files
-	shutil.rmtree(temp_dir)
+	# shutil.rmtree(temp_path)
 
 
-def parse_articles(out_dir, input_files, output_format):
+def parse_articles(out_dir, input_files, output_format, temp_path):
 
 	# Write a list of files that this process should take care of
-	file_list_path = os.path.join(
-		out_dir, 'temp', 'stanford-parse-file-list.txt'
-	)
+	file_list_path = os.path.join(temp_path, 'stanford-parse-file-list.txt')
 	open(file_list_path, 'w').write('\n'.join(input_files) + '\n')
+
+	# Get the properties file path
+	properties_path = os.path.join(temp_path, 'stanford-properties.txt')
 
 	# build the typical command
 	jars = ['*']
@@ -121,10 +122,10 @@ def parse_articles(out_dir, input_files, output_format):
 		'java',
 		'-cp',
 		jars_token, 
-		'-Xmx2g', 
+		'-Xmx5g', 
 		'edu.stanford.nlp.pipeline.StanfordCoreNLP',
 		'-props',
-		os.path.join(out_dir, 'temp', 'stanford-properties.txt'),
+		properties_path,
 		'-outputFormat',
 		output_format,
 		'-filelist',
