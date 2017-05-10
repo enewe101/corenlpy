@@ -3,3 +3,5 @@ corenlpy/out
 *.egg-info
 dist
 *.pyc
+*.swp
+*.swo
