@@ -18,11 +18,11 @@ This package is meant to make it a bit easier for python users to enjoy
 CoreNLP, by providing two basic functionalities:
 
     1. Invoke the CoreNLP pipeline to process text from within a Python 
-           script
+       script
 
     2. Load an annotated text file into memory as an AnnotatedText object,
-           so you can traverse dependency parses, inspect POS tags, or
-           find coreferent mentions without munging xml.
+       so you can traverse dependency parses, inspect POS tags, or
+       find coreferent mentions without munging xml.
 
 Installation
 ____________
@@ -32,24 +32,25 @@ these steps:
 
     1. `Download CoreNLP <https://stanfordnlp.github.io/CoreNLP/#download>`_.
     2. Unzip it, and move (rename) the resulting unzipped directory to 
-           ``~/corenlp``.
+       ``~/corenlp``.
     3. ``pip install corenlpy``
 
 You're ready to get parsing!
 
 By default, ``corenlpy`` looks for a CoreNLP installation at ``~/corenlp``. 
 Optionally, you can put CoreNLP somewhere else, and tell ``corenlpy`` where 
-it by writing an rc file at ``~/.corenlpyrc`` with the following line:
+to find it by writing an rc file at ``~/.corenlpyrc`` with the following 
+line:
 
 .. code-block:: JSON
 
-    {"corenlp_path": "path/to/the/corenlp/unzipped/dir"}
+    {"corenlp_path": "/path/to/the/corenlp/unzipped/dir"}
 
 
 Run CoreNLP in python
 ---------------------
 OK, let's annotate some files!  To run corenlp on all the files in, say, 
-"my_dir", you would do something like this:
+``my_dir``, you would do something like this:
 
 .. code-block:: python
 
@@ -79,7 +80,7 @@ Here is an example of all these options in action:
 
 .. code-block:: python
 
-    >>> c.corenlp(
+    >>> corenlpy.corenlp(
             in_dirs=['path/to/dir1', 'path/to/dir2'],
             in_files=['path/to/some/file1', 'path/to/some/file2'],
             out_dir='path/to/output_direcoty',
@@ -93,10 +94,10 @@ Note that ``in_dirs`` can be a single directory or a list thereof, and
 are provided, CoreNLP will be invoked on *all* files within them.
 
 CoreNLP has many other options that can be specified by a 
-`"properties file" options <http://stanfordnlp.github.io/CoreNLP/cmdline.html>`_ 
-(see subheading "Configuration").  Those options can be set by passing in 
-a dictionary, where the keys are property names, and the values are the
-property values.  E.g.:
+`"properties file" <http://stanfordnlp.github.io/CoreNLP/cmdline.html>`_ 
+(see subheading "Configuration").  In ``corenlpy``, those options can be 
+set by passing in a dictionary, where the keys are property names, and the
+values are the property values.  E.g.:
 
 .. code-block:: python
 
@@ -105,8 +106,8 @@ property values.  E.g.:
             properties={'ner.model':'edu/stanford/nlp/models/ner/english.conll.4class.distsim.crf.ser.gz'}
         )
 
-Note that some of the keyword options can also be set in a properties file;
-the value in the properties file takes precedence.
+Note that some of the keyword options we saw above can also be set in a 
+properties file; the value in the properties file takes precedence.
 
 Working with ``AnnotatedText``
 ------------------------------
