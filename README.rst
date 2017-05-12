@@ -1,6 +1,9 @@
 Corenlpy documentation
 ======================
 
+This documentation is best viewed on 
+`ReadTheDocs <http://corenlpy.readthedocs.io/en/latest/>`_.
+
 Purpose
 -------
 
