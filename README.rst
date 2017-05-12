@@ -102,3 +102,58 @@ values are the property values.  E.g.:
 Note that some of the keyword options we saw above can also be set in a 
 properties file; the value in the properties file takes precedence.
 
+Working with ``AnnotatedText``
+------------------------------
+The ``AnnotatedText`` class is what originally motivated the creation of
+this package.  If you need to work with annotation outputs from CoreNLP
+in Python, this will save you a lot of time.  It's best to illustrate how
+it works using an example.
+
+Example
+-------
+
+Suppose we have the one-sentence document:
+
+   *President Obama cannot run for a third term (but I think he wants to).*
+
+Let's assume that it has been processed by CoreNLP, creating the output 
+file ``obama.txt.xml``.  
+
+Instantiation
+~~~~~~~~~~~~~
+The first thing we do is import the module and get an ``AnnotatedText`` 
+object.
+
+.. code-block:: python
+
+   >>> from corenlpy import AnnotatedText as A
+   >>> xml = open('obama.txt.xml').read()
+   >>> annotated_text = A(xml)
+
+Sentences
+~~~~~~~~~
+Usually you'll access parts of the document using the ``sentences`` list.
+
+.. code-block:: python
+
+   >>> len(annotated_text.sentences)
+   1
+   >>> sentence = annotated_text.sentences[0]
+   >>> sentence.keys()
+   ['tokens', 'entities', 'references', 'mentions', 'root', 'id']
+
+
+A ``Sentence`` is a special class that, for the most part, feels like a 
+simple ``dict``.  
+
+The ``tokens`` property is a list of the sentence's tokens:
+
+.. code-block:: python
+
+   >>> obama = sentence['tokens'][1]
+   >>> obama
+   ' 0: Obama (10,14) NNP PERSON'
+   >>> term = sentence['tokens'][7]
+   >>> term
+   ' 7: term (39,42) NN -'
+
