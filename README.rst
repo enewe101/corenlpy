@@ -130,30 +130,3 @@ object.
    >>> xml = open('obama.txt.xml').read()
    >>> annotated_text = A(xml)
 
-Sentences
-~~~~~~~~~
-Usually you'll access parts of the document using the ``sentences`` list.
-
-.. code-block:: python
-
-   >>> len(annotated_text.sentences)
-   1
-   >>> sentence = annotated_text.sentences[0]
-   >>> sentence.keys()
-   ['tokens', 'entities', 'references', 'mentions', 'root', 'id']
-
-
-A ``Sentence`` is a special class that, for the most part, feels like a 
-simple ``dict``.  
-
-The ``tokens`` property is a list of the sentence's tokens:
-
-.. code-block:: python
-
-   >>> obama = sentence['tokens'][1]
-   >>> obama
-   ' 0: Obama (10,14) NNP PERSON'
-   >>> term = sentence['tokens'][7]
-   >>> term
-   ' 7: term (39,42) NN -'
-
