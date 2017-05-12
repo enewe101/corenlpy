@@ -1,12 +1,5 @@
-.. corenlpy documentation master file, created by
-   sphinx-quickstart on Wed Jul  6 22:46:00 2016.
-   You can adapt this file completely to your liking, but it should at least
-   contain the root `toctree` directive.
-
 Corenlpy documentation
 ======================
-
-.. py:module:: corenlpy
 
 Purpose
 -------
