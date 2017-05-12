@@ -124,8 +124,3 @@ Instantiation
 The first thing we do is import the module and get an ``AnnotatedText`` 
 object.
 
-.. code-block:: python
-
-   >>> from corenlpy import AnnotatedText as A
-   >>> xml = open('obama.txt.xml').read()
-   >>> annotated_text = A(xml)
