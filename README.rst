@@ -109,24 +109,3 @@ this package.  If you need to work with annotation outputs from CoreNLP
 in Python, this will save you a lot of time.  It's best to illustrate how
 it works using an example.
 
-Example
--------
-
-Suppose we have the one-sentence document:
-
-   *President Obama cannot run for a third term (but I think he wants to).*
-
-Let's assume that it has been processed by CoreNLP, creating the output 
-file ``obama.txt.xml``.  
-
-Instantiation
-~~~~~~~~~~~~~
-The first thing we do is import the module and get an ``AnnotatedText`` 
-object.
-
-.. code-block:: python
-
-   >>> from corenlpy import AnnotatedText as A
-   >>> xml = open('obama.txt.xml').read()
-   >>> annotated_text = A(xml)
-
