@@ -120,7 +120,7 @@ Let's assume that it has been processed by CoreNLP, creating the output
 file ``obama.txt.xml``.  
 
 Instantiation
-~~~~~~~~~~~~~
+-------------
 The first thing we do is import the module and get an ``AnnotatedText`` 
 object.
 
