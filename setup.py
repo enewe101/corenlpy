@@ -18,7 +18,7 @@ with open(path.join(here, 'corenlpy/README.md'), encoding='utf-8') as f:
 
 setup(
     name='corenlpy',
-    version='0.0.4',
+    version='0.0.5',
     description='Work with CoreNLP in Python',
     long_description=long_description,
     url='https://github.com/enewe101/corenlpy',
@@ -47,5 +47,5 @@ setup(
 		'data/CoreNLP/*',
 		'data/raw-text/*',
 	]},
-	install_requires=['bs4']
+	install_requires=['bs4','corenlp-xml-reader']
 )
