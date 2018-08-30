@@ -25,7 +25,7 @@ try:
 	CORENLP_PATH = json.loads(
 		open(os.path.expanduser('~/.corenlpyrc')).read()
 	)['corenlp_path']
-	print 'corenlp path is %s' % CORENLP_PATH
+	#print 'corenlp path is %s' % CORENLP_PATH
 
 # Fail if the corenlpyrc file has invalid json
 except ValueError:
